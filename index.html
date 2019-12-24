@@ -1,0 +1,346 @@
+<html>
+<script>
+
+    function EveryoneWins()
+    {
+        var contestantsArray = [];
+        var prizesArray = [];
+        var outputArray = [];
+        var outputString = "";
+        var contestantsString = document.getElementById('contestants').value;
+        var prizesString = document.getElementById('prizes').value;
+        contestantsArray = CleanInput(contestantsString).split(/[\r\n]+/);
+        prizesArray = CleanInput(prizesString).split(/[\r\n]+/);
+
+        for (var i = 0; i < contestantsArray.length; i++)
+        {
+            if (contestantsArray[i] == "")
+            {
+                contestantsArray.splice(i, 1);
+            }
+			
+			if (contestantsArray[i].includes("(")) //sloppily copied from prizesArray functionality to use similar functionality
+            {
+                var amountString = contestantsArray[i].substring(contestantsArray[i].indexOf("("), contestantsArray[i].indexOf(")") + 1); //only grabs the section of the string that has ()
+                var amountNum = contestantsArray[i].substring(contestantsArray[i].indexOf("(") + 1, contestantsArray[i].indexOf(")")); //only grabs the string inside of the ()
+                contestantsArray[i] = contestantsArray[i].replace(amountString, ""); //removes the () from the original string in the contestantsArray
+                contestantsArray[i] = contestantsArray[i].trim(); //removes any spaces at the end (and beginning) of the string
+
+                for (var j = 0; j < amountNum - 1; j++)
+                {
+                    contestantsArray.splice(i, 0, contestantsArray[i]);
+                }
+            }
+            else if (contestantsArray[i].includes("["))
+            {
+                var amountString = contestantsArray[i].substring(contestantsArray[i].indexOf("["), contestantsArray[i].indexOf("]") + 1);
+                var amountNum = contestantsArray[i].substring(contestantsArray[i].indexOf("[") + 1, contestantsArray[i].indexOf("]"));
+                contestantsArray[i] = contestantsArray[i].replace(amountString, "");
+                contestantsArray[i] = contestantsArray[i].trim();
+
+                if (contestantsArray[i].endsWith(" "))
+                {
+                    contestantsArray[i] = contestantsArray[i].replace(contestantsArray[i].charAt(contestantsArray[i].length - 1), "");
+                }
+
+                for (var j = 0; j < amountNum - 1; j++)
+                {
+                    contestantsArray.splice(i, 0, contestantsArray[i]);
+                }
+            }
+        }
+
+        for (var i = 0; i < prizesArray.length; i++)
+        {
+            if (prizesArray[i] == "")
+            {
+                prizesArray.splice(i, 1);
+            }
+
+            if (prizesArray[i].includes("("))
+            {
+                var amountString = prizesArray[i].substring(prizesArray[i].indexOf("("), prizesArray[i].indexOf(")") + 1); //only grabs the section of the string that has ()
+                var amountNum = prizesArray[i].substring(prizesArray[i].indexOf("(") + 1, prizesArray[i].indexOf(")")); //only grabs the string inside of the ()
+                prizesArray[i] = prizesArray[i].replace(amountString, ""); //removes the () from the original string in the prizesArray
+                prizesArray[i] = prizesArray[i].trim(); //removes any spaces at the end (and beginning) of the string
+
+                for (var j = 0; j < amountNum - 1; j++)
+                {
+                    prizesArray.splice(i, 0, prizesArray[i]);
+                }
+            }
+            else if (prizesArray[i].includes("["))
+            {
+                var amountString = prizesArray[i].substring(prizesArray[i].indexOf("["), prizesArray[i].indexOf("]") + 1);
+                var amountNum = prizesArray[i].substring(prizesArray[i].indexOf("[") + 1, prizesArray[i].indexOf("]"));
+                prizesArray[i] = prizesArray[i].replace(amountString, "");
+                prizesArray[i] = prizesArray[i].trim();
+
+                if (prizesArray[i].endsWith(" "))
+                {
+                    prizesArray[i] = prizesArray[i].replace(prizesArray[i].charAt(prizesArray[i].length - 1), "");
+                }
+
+                for (var j = 0; j < amountNum - 1; j++)
+                {
+                    prizesArray.splice(i, 0, prizesArray[i]);
+                }
+            }
+        }
+       
+        var origPrizesArray = prizesArray.slice(0); //slice is used because directly copying the array with update both the original and the copy
+
+        for (var i = 0; i < contestantsArray.length; i++)
+        {
+            var prizesMax = prizesArray.length;
+            var temp = Math.floor(Math.random() * prizesMax);
+            outputArray.push(contestantsArray[i] + " wins " + prizesArray[temp] + "!");
+            prizesArray.splice(temp, 1);
+            prizesMax--;
+        }
+
+        outputArray.sort();
+
+        for (var i = 0; i < outputArray.length; i++)
+        {
+            if (outputString == "")
+            {
+                outputString = outputArray[i];
+            }
+            else
+            {
+                outputString = outputString + '\n' + outputArray[i];
+            }
+        }
+
+        if (contestantsArray.length > origPrizesArray.length)
+        {
+            outputString = "There are too many contestants and not enough prizes for this giveaway!"
+        }
+        else if (document.getElementById('contestants').value == "Type each contestant's name on a new line here." && document.getElementById('prizes').value == "Type each prize on a new line here.")
+        {
+            outputString = "You need to enter in contestants and prizes!"
+        }
+        else if (document.getElementById('contestants').value == "Type each contestant's name on a new line here.")
+        {
+            outputString = "You need to enter in contestants!"
+        }
+        else if (document.getElementById('prizes').value == "Type each prize on a new line here.")
+        {
+            outputString = "You need to enter in prizes!"
+        }
+
+        document.getElementById('output').value = outputString;
+    }
+
+    function Raffle()
+    {
+        var contestantsArray = [];
+        var prizesArray = [];
+        var outputArray = [];
+        var outputString = "";
+        var contestantsString = document.getElementById('contestants').value;
+        var prizesString = document.getElementById('prizes').value;
+        contestantsArray = CleanInput(contestantsString).split(/[\r\n]+/);
+        prizesArray = CleanInput(prizesString).split(/[\r\n]+/);
+
+        for (var i = 0; i < contestantsArray.length; i++)
+        {
+            if (contestantsArray[i] == "")
+            {
+                contestantsArray.splice(i, 1);
+            }
+			
+			if (contestantsArray[i].includes("(")) //sloppily copied from prizesArray functionality to use similar functionality
+            {
+                var amountString = contestantsArray[i].substring(contestantsArray[i].indexOf("("), contestantsArray[i].indexOf(")") + 1); //only grabs the section of the string that has ()
+                var amountNum = contestantsArray[i].substring(contestantsArray[i].indexOf("(") + 1, contestantsArray[i].indexOf(")")); //only grabs the string inside of the ()
+                contestantsArray[i] = contestantsArray[i].replace(amountString, ""); //removes the () from the original string in the contestantsArray
+                contestantsArray[i] = contestantsArray[i].trim(); //removes any spaces at the end (and beginning) of the string
+
+                for (var j = 0; j < amountNum - 1; j++)
+                {
+                    contestantsArray.splice(i, 0, contestantsArray[i]);
+                }
+            }
+            else if (contestantsArray[i].includes("["))
+            {
+                var amountString = contestantsArray[i].substring(contestantsArray[i].indexOf("["), contestantsArray[i].indexOf("]") + 1);
+                var amountNum = contestantsArray[i].substring(contestantsArray[i].indexOf("[") + 1, contestantsArray[i].indexOf("]"));
+                contestantsArray[i] = contestantsArray[i].replace(amountString, "");
+                contestantsArray[i] = contestantsArray[i].trim();
+
+                if (contestantsArray[i].endsWith(" "))
+                {
+                    contestantsArray[i] = contestantsArray[i].replace(contestantsArray[i].charAt(contestantsArray[i].length - 1), "");
+                }
+
+                for (var j = 0; j < amountNum - 1; j++)
+                {
+                    contestantsArray.splice(i, 0, contestantsArray[i]);
+                }
+            }
+        }
+        
+        for (var i = 0; i < prizesArray.length; i++)
+        {
+            if (prizesArray[i] == "")
+            {
+                prizesArray.splice(i, 1);
+            }
+
+            if (prizesArray[i].includes("("))
+            {
+                var amountString = prizesArray[i].substring(prizesArray[i].indexOf("("), prizesArray[i].indexOf(")") + 1); //only grabs the section of the string that has ()
+                var amountNum = prizesArray[i].substring(prizesArray[i].indexOf("(") + 1, prizesArray[i].indexOf(")")); //only grabs the string inside of the ()
+                prizesArray[i] = prizesArray[i].replace(amountString, ""); //removes the () from the original string in the prizesArray
+                prizesArray[i] = prizesArray[i].trim(); //removes any spaces at the end (and beginning) of the string
+
+                for (var j = 0; j < amountNum - 1; j++)
+                {
+                    prizesArray.splice(i, 0, prizesArray[i]);
+                }
+            }
+            else if (prizesArray[i].includes("["))
+            {
+                var amountString = prizesArray[i].substring(prizesArray[i].indexOf("["), prizesArray[i].indexOf("]") + 1);
+                var amountNum = prizesArray[i].substring(prizesArray[i].indexOf("[") + 1, prizesArray[i].indexOf("]"));
+                prizesArray[i] = prizesArray[i].replace(amountString, "");
+                prizesArray[i] = prizesArray[i].trim();
+
+                if (prizesArray[i].endsWith(" "))
+                {
+                    prizesArray[i] = prizesArray[i].replace(prizesArray[i].charAt(prizesArray[i].length - 1), "");
+                }
+
+                for (var j = 0; j < amountNum - 1; j++)
+                {
+                    prizesArray.splice(i, 0, prizesArray[i]);
+                }
+            }
+        }
+
+        var origContestantsArray = contestantsArray.slice(0); //slice is used because directly copying the array will update both the original and the copy     
+
+        for (var i = 0; i < prizesArray.length; i++)
+        {
+            var contestantsMax = contestantsArray.length;
+            var temp = Math.floor(Math.random() * contestantsMax);
+            outputArray.push(contestantsArray[temp] + " wins " + prizesArray[i] + "!");
+            contestantsArray.splice(temp, 1);
+            contestantsMax--;
+        }
+
+        outputArray.sort(); //alphabetizes the output to make it easier to find the name in the guild roster
+
+        for (var i = 0; i < outputArray.length; i++)
+        {
+            if (outputString == "")
+            {
+                outputString = outputArray[i];
+            }
+            else
+            {
+                outputString = outputString + '\n' + outputArray[i];
+            }
+        }
+
+        if (prizesArray.length > origContestantsArray.length)
+        {
+            outputString = "There are too many prizes and not enough contestants for this giveaway!"
+        }
+        else if (document.getElementById('contestants').value == "Type each contestant's name on a new line here." && document.getElementById('prizes').value == "Type each prize on a new line here.")
+        {
+            outputString = "You need to enter in contestants and prizes!"
+        }
+        else if (document.getElementById('contestants').value == "Type each contestant's name on a new line here.")
+        {
+            outputString = "You need to enter in contestants!"
+        }
+        else if (document.getElementById('prizes').value == "Type each prize on a new line here.")
+        {
+            outputString = "You need to enter in prizes!"
+        }
+
+        document.getElementById('output').value = outputString;
+    }
+
+    function CleanInput(inputString)
+    {
+        while (inputString.indexOf("  ") >= 0 || inputString.indexOf(/[\r\n]/) == 0)
+        {
+            inputString = inputString.replace(/  /g, " ");
+        }
+        inputString = inputString.replace(/ [\r\n]+/g, "\r\n");
+        inputString = inputString.replace(/[\r\n]+ /g, "\r\n");
+        return inputString;
+    }
+
+    function ClearTextArea(textAreaIndex)
+    {
+        if (textAreaIndex == 1)
+        {
+            if (document.getElementById('contestants').value == "Type each contestant's name on a new line here.")
+            {
+                document.getElementById('contestants').value = "";
+            }
+        }
+        else
+        {
+            if (document.getElementById('prizes').value == "Type each prize on a new line here.")
+            {
+                document.getElementById('prizes').value = "";
+            }
+        }
+    }
+
+    function ResetEntries()
+    {
+        if (confirm("Press \"OK\" to confirm an entry reset."))
+        {
+            document.getElementById('contestants').value = "Type each contestant's name on a new line here.";
+            document.getElementById('prizes').value = "Type each prize on a new line here.";
+            document.getElementById('output').value = "Your output will be shown here.";
+        }
+    }
+
+</script>
+
+<title>Cramp Prize Picker</title>
+<style>
+    body 
+    {
+        background-color: #FD583E
+    }
+</style>
+<body>
+    <center>
+        &emsp;<h1 style="font-size:250%;"><u>The Minstrel Cramp's Event Prize Picker</u></h1>
+              <table width="800" border=10 bgcolor=#C0C0C0 cellpadding="8" cellspacing="2">
+				  <th style="font-size:150%;">Contestants</th>
+                  <th style="font-size:150%;">Prizes</th>
+                  <tr></tr>
+                  <th><textarea id="contestants" rows="20" cols="60" style="font-size:120%;" align=top onfocus="ClearTextArea(1)">Type each contestant's name on a new line here.</textarea></th>
+                  <th><textarea id="prizes" rows="20" cols="60" style="font-size:120%;" align=top onfocus="ClearTextArea(2)">Type each prize on a new line here.</textarea></th>
+                  <tr align=center>
+                      <th colspan=3>
+                          <button type="button" id="everyoneWinsButton" onclick="EveryoneWins()">Everyone Wins!</button> 
+                          <button type="button" id="raffleButton" onclick="Raffle()">Raffle!</button>
+                      </th>
+                  </tr>
+                  <tr align=center>
+                      <th colspan=3><textarea id="output" rows="20" cols="125" style="font-size:120%;" align=top readonly>Your output will be shown here.</textarea></th>
+                  </tr>
+                  <tr align=center>
+                      <th colspan=3>	
+						<button onclick="window.open('https://band.us/band/66978536/post/2630');">Documentation</button>
+						<button type="button" id="everyoneWinsButton" onclick="ResetEntries()">Reset</button>
+					  </th>
+                  </tr>
+              </table>
+                  <ul>
+                      <img src="cramps.jpg" alt="The Minstrel Cramps" width="680" height="480">
+                  </ul>
+</center>
+</body> 
+</html>
